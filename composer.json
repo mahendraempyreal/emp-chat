@@ -1,5 +1,14 @@
 {
     "name": "mahendraempyreal/emp-chat",
+    "type": "project",
+    "description": "Chapt app laravel",
+    "keywords": ["framework", "laravel","chatapp"],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mahendraempyreal/emp-chat"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Mahendraempyreal\\EmpChat\\": "src/"

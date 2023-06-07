@@ -1,0 +1,15 @@
+{
+    "name": "mahendraempyreal/emp-chat",
+    "autoload": {
+        "psr-4": {
+            "Mahendraempyreal\\EmpChat\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mahendraempyreal",
+            "email": "mahendra.empyreal@gmail.com"
+        }
+    ],
+    "require": {}
+}

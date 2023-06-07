@@ -1,5 +1,5 @@
 <?php
-use App\ChatApp\ChatMessenger;
+use Mahendraempyreal\EmpChat\ChatMessenger;
 $chatData = new ChatMessenger();
 
 $seenIcon = (!!$seen ? 'check-double' : 'check');

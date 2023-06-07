@@ -1,8 +1,9 @@
 {
     "name": "mahendraempyreal/emp-chat",
     "type": "project",
-    "description": "Chapt app laravel",
+    "description": "Chat app laravel using socket io",
     "keywords": ["framework", "laravel","chatapp"],
+    "license": "MIT",
     "repositories": [
         {
             "type": "vcs",

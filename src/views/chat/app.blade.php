@@ -22,7 +22,7 @@
 			@if(auth()->check())
 				<h3>Logged In As :: {{ auth()->user()->name }}</h3>
 			@else
-			<form action="{{ route('emp-chat.login') }}" method="get">
+			<form action="" method="get">
 				<div class="input-group">
 					<input type="text" name="id" class="form-control" placeholder="Enter User ID" required/>
 					<button type="submit" class="btn btn-primary">Login</button>

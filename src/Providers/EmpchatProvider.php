@@ -27,6 +27,17 @@ class EmpchatProvider extends ServiceProvider
         // $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../views', 'empchat');
         $this->loadRoutes();
+
+        // Load user's avatar folder from package's config
+        $userAvatarFolder = json_decode(json_encode(include(__DIR__.'/../config/eichat.php')))->user_avatar->folder;
+
+        // Assets
+        $this->publishes([
+            // CSS
+            __DIR__ . '/../assets' => public_path('empchat'),
+            __DIR__ . '/../imgs' => storage_path('app/public/' . $userAvatarFolder),
+        ], 'empchat-assets');
+
     }
     protected function loadRoutes()
     {

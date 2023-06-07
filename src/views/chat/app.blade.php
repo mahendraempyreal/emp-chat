@@ -111,6 +111,7 @@
 	const socketUri = "{{config('eichat.socket_url')}}";
 </script>
 @if(auth()->check())
+<script src="{{ asset('empchat/helper.js') }}"></script>
 <script src="{{ asset('empchat/index.js') }}"></script>
 @endif
 </body>

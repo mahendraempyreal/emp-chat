@@ -1,8 +1,11 @@
 //send message
 const sendMessage = (data) => {
   $.when(ajaxPostRequest(frontUrls.sendMessage, data)).done(function(data){
-    $('.chat-messages').append(data.message);
-    
+    if($('.chat-messages').find('.msg-p-dv').length > 0){
+      $('.chat-messages').append(data.message);
+    } else {
+      $('.chat-messages').html(data.message);
+    }
     const sendd = { receiver_id: currentUser, sender_id: glbl_sender_id, message: $('input[name="message"]').val(), messageHtml : data.receiver_message };
     socket.emit("send_message", sendd);
     $('input[name="message"]').val("");
@@ -17,6 +20,7 @@ const sendMessage = (data) => {
     socket.emit("send_message", sendd); */
   });
 };
+//scroll inside div
 function actionOnScroll(selector, callback, topScroll = false) {
   $(selector).on("scroll", function () {
     let element = $(this).get(0);
@@ -35,6 +39,7 @@ actionOnScroll(
   },
   true
 );
+//Get leftside panel user list
 const getContactList = () => {
   $.when(ajaxGetRequest(frontUrls.getContacts))
   .then((data)=>{
@@ -45,13 +50,12 @@ const getContactList = () => {
     }, 300);
   });
 };
+//get messages list when click on user in left side
 const getMessageList = (id, newFetch = false) => {
-  console.log('before :: ', messagesPage, newFetch);
   if (newFetch) {
     messagesPage = 1;
     noMoreMessages = false;
   }
-  console.log('after :: ', messagesPage);
   if(!noMoreMessages){
     $.when(ajaxPostRequest(frontUrls.fetchMessages, { id, page: messagesPage }))
     .then((data)=>{
@@ -68,21 +72,21 @@ const getMessageList = (id, newFetch = false) => {
         messagesElement.prepend(data.messages);
         messagesContainer.scrollTop(lastMsg.offset().top - curOffset);
       }
-      // trigger seen event
       // Pagination lock & messages page
       noMoreMessages = messagesPage >= data?.last_page;
-      console.log('noMoreMessages', noMoreMessages, messagesPage, data?.last_page);
       if (!noMoreMessages) messagesPage += 1;
         
     });
   }
 };
+//mark messages as seen
 const markAsSeen = () => {
   $.when(ajaxPostRequest(frontUrls.markAsSeen, { id: currentUser }))
   .then((data)=>{
     $('.left-contact').find("a.list-group-item.active").find('.unseen').remove();
   });
 };
+
 function scrollToBottom(container) {
   $(container)
     .stop()
@@ -90,3 +94,10 @@ function scrollToBottom(container) {
       scrollTop: $(container)[0].scrollHeight,
     });
 }
+//get user list that has no in left side list
+const getUsers = () => {
+  $.when(ajaxGetRequest(frontUrls.getUsers))
+  .then((data)=>{
+    $("#select_user").html(data.contacts)
+  });
+};

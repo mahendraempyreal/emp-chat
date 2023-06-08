@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 /*
 * This is the main app route [Chat Messenger]
 */
-// dd(config('eichat.routes.prefix'));
+
 Route::get('/', 'ChatController@index')->name(config('eichat.routes.prefix'));
 
 /**

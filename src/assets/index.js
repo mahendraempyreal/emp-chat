@@ -86,6 +86,7 @@
 	});
 	/* Socket Events End */
 
+	getUsers();
 	getContactList();
 	/* Keypress event for typing */
 	$("input[name='message']").keyup(function(e) {
@@ -212,7 +213,12 @@
 			$.when(ajaxGetRequest(`${frontUrls.getUserCard}?id=${selId}`))
 			.then((data)=>{
 				$("#select_user").find('option[value="'+selId+'"]').remove();
-				$('.left-contact').find('.user-info').first().before(data.html);
+				if($('.left-contact').find('.user-info').length > 0){
+					$('.left-contact').find('.user-info').first().before(data.html);
+				} else {
+					$('.left-contact').find('.message-hint').remove();
+					$('.left-contact').append(data.html);
+				}
 				setTimeout(() => {
 					$('.left-contact').find('.user-info').first().click();
 				}, 400);

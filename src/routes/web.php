@@ -7,8 +7,17 @@ use Illuminate\Support\Facades\Route;
 /*
 * This is the main app route [Chat Messenger]
 */
-
 Route::get('/', 'ChatController@index')->name(config('eichat.routes.prefix'));
+
+/**
+ * Get User's List for dropdown
+ */
+Route::get('/get-users', 'ChatController@getUserNotInChatList')->name('users');
+
+/**
+ * Get user's card html for left side section
+ */
+Route::get('/get-card', 'ChatController@getContactCard')->name('users.card');
 
 /**
  *  Fetch info for specific id [user/group]

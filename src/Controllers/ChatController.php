@@ -153,6 +153,73 @@ class ChatController extends Controller{
     ], 200);
   }
   /**
+   * Get user list that are not in chat list
+   *
+   * @param Request $request
+   * @return JsonResponse
+   */
+  
+  public function getUserNotInChatList(Request $request){
+    /* $usersList = User::where(function($q) {
+      $q->whereNotIn('id', function($query){
+        $query->select('from_id')
+        ->from('ei_chat_message')
+        ->where('from_id','!=',Auth::user()->id)
+        ->orWhere('to_id','!=',Auth::user()->id);
+      })->whereNotIn('id', function($query){
+        $query->select('to_id')
+        ->from('ei_chat_message')
+        ->where('from_id','!=',Auth::user()->id)
+        ->orWhere('to_id','!=',Auth::user()->id);
+      });
+    })->get(); */
+    $usersList = User::where('id','!=',Auth::user()->id)->where(function($q) {
+      $q->whereNotIn('id', function($query){
+        $query->select(DB::raw('distinct (case when to_id = '.Auth::user()->id.' then from_id else to_id end) as contact_id'))
+        ->from('ei_chat_message')
+        ->where('from_id','=',Auth::user()->id)
+        ->orWhere('to_id','=',Auth::user()->id);
+      });
+    })->get();
+  
+    $contacts = '';
+    if (count($usersList) > 0) {
+      $contacts = '<option value="">Select User</option>';
+      foreach ($usersList as $user) {
+        $contacts .= '<option value="'.$user->id.'">'.$user->name.'</option>';
+      }
+    } else {
+      $contacts = '<option>Select User</option>';
+    }
+
+    return Response::json([
+      'usersList' => $usersList,
+      'contacts' => $contacts,
+    ], 200);
+  }
+
+  /**
+   * Get contact card html when start a new chat
+   *
+   * @param Request $request id
+   * @return JsonResponse
+   */
+  public function getContactCard(Request $request){
+    $user = User::find($request->id);
+    $lastMessage = (object)['from_id' => '','to_id' => '', 'body'=>'', 'created_at'=>'', 'timeAgo'=>'', 'attachment'=>null];
+    // Get Unseen messages counter
+    $unseenCounter = isset($request->unseen) ? 1 : 0;
+    $html = view('empchat::chat.layouts.listItem', [
+        'get' => 'users',
+        'user' => $this->chatData->getUserWithAvatar($user),
+        'lastMessage' => $lastMessage,
+        'unseenCounter' => $unseenCounter,
+        ])->render();
+    return Response::json([
+          'html' => $html,
+        ], 200);    
+  }
+  /**
    * Get contacts list
    *
    * @param Request $request
@@ -193,32 +260,32 @@ class ChatController extends Controller{
   }
 
   /**
-     * Search in messenger
-     *
-     * @param Request $request
-     * @return JsonResponse|void
-     */
-    public function search(Request $request){
-      $getRecords = null;
-      $input = trim(filter_var($request['input']));
-      $records = User::where('id','!=',Auth::user()->id)
-                  ->where('name', 'LIKE', "%{$input}%")
-                  ->paginate($request->per_page ?? $this->perPage);
-      foreach ($records->items() as $record) {
-          $getRecords .= view('empchat::layouts.listItem', [
-              'get' => 'search_item',
-              'user' => $this->chatData->getUserWithAvatar($record),
-          ])->render();
-      }
-      if($records->total() < 1){
-          $getRecords = '<p class="message-hint center-el"><span>Nothing to show.</span></p>';
-      }
-      // send the response
-      return Response::json([
-        'records' => $getRecords,
-        'total' => $records->total(),
-        'last_page' => $records->lastPage()
-      ], 200);
+   * Search contacts
+   *
+   * @param Request $request
+   * @return JsonResponse|void
+   */
+  public function search(Request $request){
+    $getRecords = null;
+    $input = trim(filter_var($request['input']));
+    $records = User::where('id','!=',Auth::user()->id)
+                ->where('name', 'LIKE', "%{$input}%")
+                ->paginate($request->per_page ?? $this->perPage);
+    foreach ($records->items() as $record) {
+        $getRecords .= view('empchat::layouts.listItem', [
+            'get' => 'search_item',
+            'user' => $this->chatData->getUserWithAvatar($record),
+        ])->render();
+    }
+    if($records->total() < 1){
+        $getRecords = '<p class="message-hint center-el"><span>Nothing to show.</span></p>';
+    }
+    // send the response
+    return Response::json([
+      'records' => $getRecords,
+      'total' => $records->total(),
+      'last_page' => $records->lastPage()
+    ], 200);
   }
 
   /**
@@ -250,13 +317,13 @@ class ChatController extends Controller{
    * @return JsonResponse
    */
   public function deleteConversation(Request $request){
-      // delete
-      $delete = $this->chatData->deleteConversation($request['id']);
+    // delete
+    $delete = $this->chatData->deleteConversation($request['id']);
 
-      // send the response
-      return Response::json([
-          'deleted' => $delete ? 1 : 0,
-      ], 200);
+    // send the response
+    return Response::json([
+        'deleted' => $delete ? 1 : 0,
+    ], 200);
   }
 
   /**

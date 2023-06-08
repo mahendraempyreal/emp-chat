@@ -8,12 +8,16 @@ $seenIcon = (!!$seen ? 'check-double' : 'check');
 </span>"; */
 $timeAndSeen = "<div class='text-muted small text-nowrap mt-2'>".($isSender ? "<span class='fas fa-$seenIcon' seen'></span>" : '' )."$timeAgo</div>";
 ?>
-<div class="@if($isSender) chat-message-right @else chat-message-left @endif pb-4" data-id="{{ $id }}">
-    <div>
+<div class="msg-p-dv @if($isSender) chat-message-right @else chat-message-left @endif pb-4" data-id="{{ $id }}">
+    <!-- <div>
         <img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
-        <!-- {{ $timeAndSeen }} -->
-    </div>
-    <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
+    </div> -->
+    <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3 position-relative">
+        @if($isSender)
+            <span class="rm-msg">
+                <img src="{{ asset('empchat/remove.png') }}">
+            </span>
+        @endif
         @if (@$attachment->type != 'image' || $message)
             {!! ($message == null && $attachment != null && @$attachment->type != 'file') ? $attachment->title : nl2br($message) !!}
             {!! $timeAndSeen !!}

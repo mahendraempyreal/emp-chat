@@ -26,6 +26,11 @@ class EmpchatProvider extends ServiceProvider
         ], 'empchat-config');
         // $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../views', 'empchat');
+        $this->loadMigrationsFrom([
+            __DIR__ . '/database/migrations/2023_06_02_102925_add_active_status_to_users.php' => database_path('migrations/' . date('Y_m_d') . '_102925_add_active_status_to_users.php'),
+            __DIR__ . '/database/migrations/2023_06_02_102925_add_avatar_to_users.php' => database_path('migrations/' . date('Y_m_d') . '_102925_add_avatar_to_users.php'),
+            __DIR__ . '/database/migrations/2023_06_02_102925_create_ei_chat_message_table.php' => database_path('migrations/' . date('Y_m_d') . '_102925_create_ei_chat_message_table.php'),
+        ], 'empchat-migrations');
         $this->loadRoutes();
 
         // Load user's avatar folder from package's config

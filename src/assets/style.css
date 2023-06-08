@@ -43,3 +43,14 @@ body{margin-top:20px;}
 .border-top {
     border-top: 1px solid #dee2e6!important;
 }
+.chat-messages .rm-msg {
+    right: 5px;
+    top: 0;
+    color: red;
+    cursor: pointer;
+    position: absolute;
+}
+.chat-messages .rm-msg img {
+    height: 12px;
+    width: 12px;
+}

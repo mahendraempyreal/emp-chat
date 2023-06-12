@@ -89,6 +89,11 @@
 	getUsers();
 	getContactList();
 	/* Keypress event for typing */
+	var timeout;
+	function sendStopTyping() {
+		sendd = { sender_id:glbl_sender_id, receiver_id:currentUser };
+		socket.emit("stop_typing", sendd);
+	}
 	$("input[name='message']").keyup(function(e) {
 		if(!e.shiftKey && e.which == 13){
 			if($(this).val().trim().length > 0){
@@ -97,12 +102,15 @@
 					message: $(this).val()
 				};
 				sendMessage(data);
-				sendd = { sender_id:glbl_sender_id, receiver_id:currentUser };
-				socket.emit("stop_typing", sendd);
+				clearTimeout(timeout);
+ 				timeout = setTimeout(sendStopTyping, 1000);
 			}
 		} else {
 			sendd = { sender_id:glbl_sender_id, receiver_id:currentUser };
 			socket.emit("is_typing", sendd);
+
+			clearTimeout(timeout);
+ 			timeout = setTimeout(sendStopTyping, 1000);
 		}
 	});
 	/* Keypress event for stop typing */

@@ -49,6 +49,10 @@ class EmpchatProvider extends ServiceProvider
         Route::group($this->routesConfigurations(), function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         });
+        // dd($this->apiRoutesConfigurations());
+        Route::group($this->apiRoutesConfigurations(), function () {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+        });
     }
 
     /**
@@ -63,6 +67,14 @@ class EmpchatProvider extends ServiceProvider
             'prefix' => config('eichat.routes.prefix'),
             'namespace' =>  config('eichat.routes.namespace'),
             'middleware' => config('eichat.routes.middleware'),
+        ];
+    }
+    private function apiRoutesConfigurations()
+    {
+        return [
+            'prefix' => config('eichat.api_routes.prefix'),
+            'namespace' =>  config('eichat.api_routes.namespace'),
+            'middleware' => config('eichat.api_routes.middleware'),
         ];
     }
 }

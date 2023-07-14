@@ -36,7 +36,7 @@ return [
     ],
     'api_routes' => [
         'prefix' => env('EICHAT_API_ROUTES_PREFIX', 'emp-chat/api'),
-        'middleware' => env('EICHAT_API_ROUTES_MIDDLEWARE', ['api']),
+        'middleware' => env('EICHAT_API_ROUTES_MIDDLEWARE', ['api','auth:sanctum']),
         'namespace' => env('EICHAT_API_ROUTES_NAMESPACE', 'Mahendraempyreal\EmpChat\Controllers\Api'),
     ],
 
